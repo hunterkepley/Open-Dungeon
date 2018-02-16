@@ -32,7 +32,7 @@ func generateRooms(amount int, startPos pixel.Vec, size pixel.Vec, max pixel.Vec
 		rSize := pixel.V(rW, rH)
 		room := Room{rPos, rSize}
 		for j := 0; j < len(rooms); j++ {
-			if room.intersects(rooms[j]) {
+			if room.intersectsRoom(rooms[j]) {
 				alone = false
 				i--
 				break
@@ -46,7 +46,7 @@ func generateRooms(amount int, startPos pixel.Vec, size pixel.Vec, max pixel.Vec
 	}
 }
 
-func (a Room) intersects(b Room) bool { // Fix this
+func (a Room) intersectsRoom(b Room) bool { // Fix this
 	if a.pos.X < b.pos.X + b.size.X &&
 	  a.pos.X + a.size.X > b.pos.X &&
 	  a.pos.Y < b.pos.Y + b.size.Y &&
@@ -59,4 +59,8 @@ func (a Room) intersects(b Room) bool { // Fix this
 func (r Room) render(imd *imdraw.IMDraw) {
 	imd.Push(pixel.V(r.pos.X + (r.size.X/2.0), r.pos.Y), pixel.V(r.pos.X + (r.size.X/2.0), r.pos.Y + r.size.Y))
 	imd.Line(r.size.X)
+}
+
+func (r Room) getCenter() pixel.Vec { // Returns center vector of the room
+	return pixel.V(r.pos.X+(r.size.X/2), r.pos.Y+(r.size.Y/2))
 }

@@ -42,7 +42,8 @@ func run() {
 
 	rand.Seed(time.Now().UTC().UnixNano()) // Seed for random ints
 
-	go generateRooms(50, pixel.V(0, 0), pixel.V(800, 600), pixel.V(100, 100), pixel.V(25, 25))
+	go generateRooms(5, pixel.V(0, 0), pixel.V(675, 475), pixel.V(125, 125), pixel.V(25, 25))
+	go generateCorridors()
 
 	imd := imdraw.New(nil)
 
@@ -61,6 +62,9 @@ func run() {
 
 			for i := 0; i < len(rooms); i++ {
 				rooms[i].render(imd)
+			}
+			for i := 0; i < len(corridors); i++ {
+				corridors[i].render(imd)
 			}
 
 			imd.Draw(win) // Draws shapes
