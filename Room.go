@@ -14,6 +14,7 @@ var (
 type Room struct {
 	pos pixel.Vec
 	size pixel.Vec
+	closest int
 }
 
 func newRoom(pos pixel.Vec, size pixel.Vec) Room {
@@ -21,7 +22,7 @@ func newRoom(pos pixel.Vec, size pixel.Vec) Room {
 }
 
 /* Amount of rooms, starting pos of spawning, size of bounds to make new rooms, max size of room, and min size of room*/
-func generateRooms(amount int, startPos pixel.Vec, size pixel.Vec, max pixel.Vec, min pixel.Vec) {
+func generateRooms(doneRooms chan bool, amount int, startPos pixel.Vec, size pixel.Vec, max pixel.Vec, min pixel.Vec) {
 	for i := 0; i < amount; i++ {
 		alone := true // Check for intersections with existing rooms, delete if false
 		rX := randFloat64(startPos.X, startPos.X+size.X)
@@ -41,9 +42,10 @@ func generateRooms(amount int, startPos pixel.Vec, size pixel.Vec, max pixel.Vec
 		fmt.Println(len(rooms))
 		fmt.Println(fmt.Sprintf("#%d", i))
 		if alone {
-			rooms = append(rooms, room)
+			rooms = append(0, rooms, room)
 		}
 	}
+	doneRooms <- true
 }
 
 func (a Room) intersectsRoom(b Room) bool { // Fix this
@@ -57,8 +59,8 @@ func (a Room) intersectsRoom(b Room) bool { // Fix this
 }
 
 func (r Room) render(imd *imdraw.IMDraw) {
-	imd.Push(pixel.V(r.pos.X + (r.size.X/2.0), r.pos.Y), pixel.V(r.pos.X + (r.size.X/2.0), r.pos.Y + r.size.Y))
-	imd.Line(r.size.X)
+	imd.Push(pixel.V(r.pos.X, r.pos.Y), pixel.V(r.pos.X + r.size.X, r.pos.Y + r.size.Y))
+	imd.Rectangle(0)
 }
 
 func (r Room) getCenter() pixel.Vec { // Returns center vector of the room
