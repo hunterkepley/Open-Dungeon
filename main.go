@@ -44,7 +44,7 @@ func run() {
 
 	doneRooms := make(chan bool)
 
-	go generateRooms(doneRooms, 5, pixel.V(0, 0), pixel.V(675, 475), pixel.V(150, 150), pixel.V(50, 50))
+	go generateRooms(doneRooms, 10, pixel.V(0, 0), pixel.V(675, 475), pixel.V(125, 125), pixel.V(25, 25))
 	if <-doneRooms {
 		go generateCorridors()
 	}

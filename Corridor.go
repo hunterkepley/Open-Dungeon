@@ -10,7 +10,7 @@ import (
 
 var (
 	corridors []Corridor
-	corridorWidth = 10.0
+	corridorWidth = 5.0
 )
 
 type Corridor struct {
@@ -39,15 +39,24 @@ func generateCorridors() {
 				fmt.Println(fmt.Sprintf("%d is closest to %d", i, closest))
 			}
 		}
-		cH := Corridor{pixel.V(rooms[i].getCenter().X, rooms[i].getCenter().Y), pixel.V(rooms[closest].getCenter().X - rooms[i].getCenter().X, corridorWidth)}
-		corridors = append(corridors, cH)
-		if rooms[i].pos.Y > rooms[closest].pos.Y { // If the closest room is below it, then put the vertical room at the top of the path
-			cV := Corridor{pixel.V(cH.pos.X+cH.size.X, cH.pos.Y+cH.size.Y), pixel.V(corridorWidth, rooms[closest].pos.Y - cH.pos.Y)}
-			corridors = append(corridors, cV)
-		} else { // Else, put it at the top of the path [otherwise, it would only touch corners]
-			cV := Corridor{pixel.V(cH.pos.X+cH.size.X, cH.pos.Y), pixel.V(corridorWidth, rooms[closest].pos.Y - cH.pos.Y)}
-			corridors = append(corridors, cV)
+		if i == rooms[rooms[i].closest].closest {
+			if len(rooms) > 2 {
+				if rooms[i].closest != 0 && i != 0 { // All of this makes sure that the rooms don't connect to eachother.
+					rooms[i].closest = 0
+				} else if rooms[i].closest != 1 && i != 1 {
+					rooms[i].closest = 1
+				} else if rooms[i].closest != 2 && i != 2 {
+					rooms[i].closest = 2
+				}
+			}
 		}
+		cH := Corridor{pixel.V(rooms[i].getCenter().X, rooms[i].getCenter().Y), pixel.V(rooms[rooms[i].closest].getCenter().X - rooms[i].getCenter().X, corridorWidth)}
+		corridors = append(corridors, cH)
+		cV := Corridor{pixel.V(cH.pos.X+cH.size.X/*+corridorWidth*/, cH.pos.Y+cH.size.Y), pixel.V(corridorWidth, rooms[rooms[i].closest].pos.Y - cH.pos.Y)}
+		if cH.size.X > 0 {
+			cV = Corridor{pixel.V(cH.pos.X+cH.size.X-corridorWidth, cH.pos.Y+cH.size.Y), pixel.V(corridorWidth, rooms[rooms[i].closest].pos.Y - cH.pos.Y)}
+		}
+		corridors = append(corridors, cV)
 	}
 }
 

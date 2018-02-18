@@ -17,8 +17,8 @@ type Room struct {
 	closest int
 }
 
-func newRoom(pos pixel.Vec, size pixel.Vec) Room {
-	return Room{pos, size}
+func newRoom(pos pixel.Vec, size pixel.Vec, i int) Room {
+	return Room{pos, size, i}
 }
 
 /* Amount of rooms, starting pos of spawning, size of bounds to make new rooms, max size of room, and min size of room*/
@@ -31,7 +31,7 @@ func generateRooms(doneRooms chan bool, amount int, startPos pixel.Vec, size pix
 		rH := randFloat64(min.Y, max.Y)
 		rPos := pixel.V(rX, rY)
 		rSize := pixel.V(rW, rH)
-		room := Room{rPos, rSize}
+		room := newRoom(rPos, rSize, 0)
 		for j := 0; j < len(rooms); j++ {
 			if room.intersectsRoom(rooms[j]) {
 				alone = false
@@ -42,7 +42,7 @@ func generateRooms(doneRooms chan bool, amount int, startPos pixel.Vec, size pix
 		fmt.Println(len(rooms))
 		fmt.Println(fmt.Sprintf("#%d", i))
 		if alone {
-			rooms = append(0, rooms, room)
+			rooms = append(rooms, room)
 		}
 	}
 	doneRooms <- true
