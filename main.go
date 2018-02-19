@@ -1,5 +1,6 @@
 /* Hunter Kepley 2018
- * Game about conveyers and puzzles? Infinifactory 2d?
+ * Dungeon crawler w/ full random generation
+ * MIT License, check github.com/hunterkepley/Open_Dungeon for more details on that
  */
 
 package main
@@ -42,9 +43,9 @@ func run() {
 
 	rand.Seed(time.Now().UTC().UnixNano()) // Seed for random ints
 
-	doneRooms := make(chan bool)
+	doneRooms := make(chan bool) // Make sure rooms are finished generating before generating anything else
 
-	go generateRooms(doneRooms, 10, pixel.V(0, 0), pixel.V(675, 475), pixel.V(125, 125), pixel.V(25, 25))
+	go generateRooms(doneRooms, 10, pixel.V(200, 200), pixel.V(350, 350), pixel.V(125, 125), pixel.V(25, 25))
 	if <-doneRooms {
 		go generateCorridors()
 	}

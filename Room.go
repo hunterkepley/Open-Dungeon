@@ -27,6 +27,10 @@ func generateRooms(doneRooms chan bool, amount int, startPos pixel.Vec, size pix
 		alone := true // Check for intersections with existing rooms, delete if false
 		rX := randFloat64(startPos.X, startPos.X+size.X)
 		rY := randFloat64(startPos.Y, startPos.Y+size.Y)
+		if i != 0 {
+			rX = randFloat64(rooms[i-1].pos.X - max.X, (rooms[i-1].pos.X + rooms[i-1].size.X) + max.X/2)
+			rY = randFloat64(rooms[i-1].pos.Y - max.Y, (rooms[i-1].pos.Y + rooms[i-1].size.Y) + max.Y/2)
+		}
 		rW := randFloat64(min.X, max.X)
 		rH := randFloat64(min.Y, max.Y)
 		rPos := pixel.V(rX, rY)
