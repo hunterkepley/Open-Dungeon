@@ -14,7 +14,7 @@ var (
 type Room struct {
 	pos pixel.Vec
 	size pixel.Vec
-	closest int
+	connector int
 }
 
 func newRoom(pos pixel.Vec, size pixel.Vec, i int) Room {
