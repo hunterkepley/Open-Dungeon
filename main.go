@@ -24,6 +24,8 @@ var (
 	frames   = 0 // For fps
 	second   = time.Tick(time.Second) // For fps
 	gameMode = 1 // 0 = in main menu, 1 = in game
+	camPos = pixel.ZV
+	playerSpeed = 250.0 // Used for camera speed *and* player speed
 )
 
 const (
@@ -45,7 +47,7 @@ func run() {
 
 	doneRooms := make(chan bool) // Make sure rooms are finished generating before generating anything else
 
-	go generateRooms(doneRooms, 10, pixel.V(200, 200), pixel.V(350, 350), pixel.V(125, 125), pixel.V(25, 25))
+	go generateRooms(doneRooms, 50, pixel.V(0, 0), pixel.V(125, 125), pixel.V(25, 25))
 	if <-doneRooms {
 		go generateCorridors()
 	}
@@ -60,6 +62,29 @@ func run() {
 			dt := time.Since(last).Seconds()
 			_ = dt
 			last = time.Now()
+
+			/* This is all temporary, 
+			 * going to add input to 
+			 * functions in the player 
+			 * struct later            */
+			if win.Pressed(pixelgl.KeyA) {
+				camPos.X -= playerSpeed * dt
+			}
+			if win.Pressed(pixelgl.KeyD) {
+				camPos.X += playerSpeed * dt
+			}
+			if win.Pressed(pixelgl.KeyS) {
+				camPos.Y -= playerSpeed * dt
+			}
+			if win.Pressed(pixelgl.KeyW) {
+				camPos.Y += playerSpeed * dt
+			}
+			/*
+			 * ^
+			 */
+
+			cam := pixel.IM.Moved(win.Bounds().Center().Sub(camPos))
+			win.SetMatrix(cam)
 
 			imd.Clear() // Resets shape buffer
 

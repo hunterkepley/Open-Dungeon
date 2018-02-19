@@ -14,19 +14,20 @@ var (
 type Room struct {
 	pos pixel.Vec
 	size pixel.Vec
-	connector int
+	connector int // Room connected to this room
+	corridored bool // Whether it has a corridor or not
 }
 
-func newRoom(pos pixel.Vec, size pixel.Vec, i int) Room {
-	return Room{pos, size, i}
+func newRoom(pos pixel.Vec, size pixel.Vec, i int) Room { // Room constructor
+	return Room{pos, size, i, false}
 }
 
 /* Amount of rooms, starting pos of spawning, size of bounds to make new rooms, max size of room, and min size of room*/
-func generateRooms(doneRooms chan bool, amount int, startPos pixel.Vec, size pixel.Vec, max pixel.Vec, min pixel.Vec) {
+func generateRooms(doneRooms chan bool, amount int, startPos pixel.Vec, max pixel.Vec, min pixel.Vec) {
 	for i := 0; i < amount; i++ {
 		alone := true // Check for intersections with existing rooms, delete if false
-		rX := randFloat64(startPos.X, startPos.X+size.X)
-		rY := randFloat64(startPos.Y, startPos.Y+size.Y)
+		rX := startPos.X
+		rY := startPos.Y
 		if i != 0 {
 			rX = randFloat64(rooms[i-1].pos.X - max.X, (rooms[i-1].pos.X + rooms[i-1].size.X) + max.X/2)
 			rY = randFloat64(rooms[i-1].pos.Y - max.Y, (rooms[i-1].pos.Y + rooms[i-1].size.Y) + max.Y/2)
@@ -52,7 +53,7 @@ func generateRooms(doneRooms chan bool, amount int, startPos pixel.Vec, size pix
 	doneRooms <- true
 }
 
-func (a Room) intersectsRoom(b Room) bool { // Fix this
+func (a Room) intersectsRoom(b Room) bool { // If 2 rooms intersect, used for generation
 	if a.pos.X < b.pos.X + b.size.X &&
 	  a.pos.X + a.size.X > b.pos.X &&
 	  a.pos.Y < b.pos.Y + b.size.Y &&
