@@ -25,7 +25,8 @@ var (
 	second   = time.Tick(time.Second) // For fps
 	gameMode = 1 // 0 = in main menu, 1 = in game
 	camPos = pixel.ZV
-	playerSpeed = 250.0 // Used for camera speed *and* player speed
+	camZoom = 1.0
+	camZoomSpeed = 1.2
 )
 
 const (
@@ -47,10 +48,12 @@ func run() {
 
 	doneRooms := make(chan bool) // Make sure rooms are finished generating before generating anything else
 
-	go generateRooms(doneRooms, 50, pixel.V(0, 0), pixel.V(125, 125), pixel.V(25, 25))
+	go generateRooms(doneRooms, 50, pixel.V(0, 0), pixel.V(500, 500), pixel.V(350, 350))
 	if <-doneRooms {
 		go generateCorridors()
 	}
+
+	player := newPlayer(pixel.V(-12.5, -12.5), pixel.V(25, 25)) // New player, placed in the middle of the camera.
 
 	imd := imdraw.New(nil)
 
@@ -63,39 +66,25 @@ func run() {
 			_ = dt
 			last = time.Now()
 
-			/* This is all temporary, 
-			 * going to add input to 
-			 * functions in the player 
-			 * struct later            */
-			if win.Pressed(pixelgl.KeyA) {
-				camPos.X -= playerSpeed * dt
-			}
-			if win.Pressed(pixelgl.KeyD) {
-				camPos.X += playerSpeed * dt
-			}
-			if win.Pressed(pixelgl.KeyS) {
-				camPos.Y -= playerSpeed * dt
-			}
-			if win.Pressed(pixelgl.KeyW) {
-				camPos.Y += playerSpeed * dt
-			}
-			/*
-			 * ^
-			 */
+			player.update(playerSpeed, win, dt, &camPos)
 
-			cam := pixel.IM.Moved(win.Bounds().Center().Sub(camPos))
+			cam := pixel.IM.Scaled(camPos, camZoom).Moved(win.Bounds().Center().Sub(camPos))
 			win.SetMatrix(cam)
 
 			imd.Clear() // Resets shape buffer
 
-			win.Clear(colornames.Steelblue)
+			win.Clear(colornames.Black)
 
+			imd.Color = colornames.Lawngreen
 			for i := 0; i < len(rooms); i++ {
 				rooms[i].render(imd)
 			}
 			for i := 0; i < len(corridors); i++ {
 				corridors[i].render(imd)
 			}
+
+			imd.Color = colornames.Ivory
+			player.render(imd)
 
 			imd.Draw(win) // Draws shapes
 		}

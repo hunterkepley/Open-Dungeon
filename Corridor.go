@@ -7,7 +7,7 @@ import (
 
 var (
 	corridors []Corridor
-	corridorWidth = 5.0
+	corridorWidth = 75.0
 )
 
 type Corridor struct {
