@@ -10,9 +10,9 @@ import (
 	_ "image"
 	_ "image/jpeg"
 	_ "image/png"
+	"math/rand"
 	_ "os"
 	"time"
-	"math/rand"
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
@@ -21,11 +21,11 @@ import (
 )
 
 var (
-	frames   = 0 // For fps
-	second   = time.Tick(time.Second) // For fps
-	gameMode = 1 // 0 = in main menu, 1 = in game
-	camPos = pixel.ZV
-	camZoom = 1.0
+	frames       = 0                      // For fps
+	second       = time.Tick(time.Second) // For fps
+	gameMode     = 1                      // 0 = in main menu, 1 = in game
+	camPos       = pixel.ZV
+	camZoom      = 0.5
 	camZoomSpeed = 1.2
 )
 
@@ -48,7 +48,7 @@ func run() {
 
 	doneRooms := make(chan bool) // Make sure rooms are finished generating before generating anything else
 
-	go generateRooms(doneRooms, 50, pixel.V(0, 0), pixel.V(500, 500), pixel.V(350, 350))
+	go generateRooms(doneRooms, 500, pixel.V(0, 0), pixel.V(500, 500), pixel.V(350, 350))
 	if <-doneRooms {
 		go generateCorridors()
 	}
