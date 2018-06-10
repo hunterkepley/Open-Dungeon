@@ -3,6 +3,10 @@
 
 Open Dungeon is an open source dungeon crawler with many features planned, full random generation and randomly generated enemies planned
 
+![Image Zoomed Out](https://i.imgur.com/BQe9rwE.png)
+
+![Image Normal](https://i.imgur.com/ucMb1Eo.png)
+
 Made in Go, using [Faiface's Pixel](https://github.com/faiface/pixel) as a library for rendering, input, and window.
 
 ## Installation
