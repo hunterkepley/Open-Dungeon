@@ -3,7 +3,7 @@
 # Open Dungeon
 ------
 
-Open Dungeon is an open source dungeon crawler with many features planned, full random generation and randomly generated enemies planned
+Open Dungeon is an open source dungeon generator
 
 ![Image Zoomed Out](https://i.imgur.com/BQe9rwE.png)
 
