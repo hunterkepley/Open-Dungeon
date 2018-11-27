@@ -30,8 +30,8 @@ var (
 )
 
 const (
-	WinWidth  = 800 // Basic starting size.. Not sure if resizing will be added as of yet
-	WinHeight = 600
+	WinWidth  = 1024 // Basic starting size.. Not sure if resizing will be added as of yet
+	WinHeight = 768
 )
 
 func run() {

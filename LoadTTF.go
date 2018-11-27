@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/golang/freetype/truetype"
-	"golang.org/x/image/font"
 	"io/ioutil"
 	"os"
+
+	"github.com/golang/freetype/truetype"
+	"golang.org/x/image/font"
 )
 
 func loadTTF(path string, size float64) (font.Face, error) {

@@ -6,12 +6,12 @@ import (
 )
 
 var (
-	corridors []Corridor
+	corridors     []Corridor
 	corridorWidth = 75.0
 )
 
 type Corridor struct {
-	pos pixel.Vec
+	pos  pixel.Vec
 	size pixel.Vec
 }
 
@@ -23,13 +23,13 @@ func generateCorridors() {
 	for i := 0; i < len(rooms); i++ {
 		if !rooms[i].corridored {
 			if i > 0 { // Connect to the last made room to make sure they all connect.
-				rooms[i].connector = i-1
+				rooms[i].connector = i - 1
 			}
-			cH := Corridor{pixel.V(rooms[i].getCenter().X, rooms[i].getCenter().Y), pixel.V(rooms[rooms[i].connector].getCenter().X - rooms[i].getCenter().X, corridorWidth)}
+			cH := Corridor{pixel.V(rooms[i].getCenter().X, rooms[i].getCenter().Y), pixel.V(rooms[rooms[i].connector].getCenter().X-rooms[i].getCenter().X, corridorWidth)}
 			corridors = append(corridors, cH)
-			cV := Corridor{pixel.V(cH.pos.X+cH.size.X, cH.pos.Y+cH.size.Y), pixel.V(corridorWidth, rooms[rooms[i].connector].pos.Y - cH.pos.Y)}
+			cV := Corridor{pixel.V(cH.pos.X+cH.size.X, cH.pos.Y+cH.size.Y), pixel.V(corridorWidth, rooms[rooms[i].connector].pos.Y-cH.pos.Y)}
 			if cH.size.X > 0 {
-				cV = Corridor{pixel.V(cH.pos.X+cH.size.X-corridorWidth, cH.pos.Y+cH.size.Y), pixel.V(corridorWidth, rooms[rooms[i].connector].pos.Y - cH.pos.Y)}
+				cV = Corridor{pixel.V(cH.pos.X+cH.size.X-corridorWidth, cH.pos.Y+cH.size.Y), pixel.V(corridorWidth, rooms[rooms[i].connector].pos.Y-cH.pos.Y)}
 			}
 			corridors = append(corridors, cV)
 			rooms[i].corridored = true
@@ -38,7 +38,7 @@ func generateCorridors() {
 }
 
 func (c Corridor) render(imd *imdraw.IMDraw) {
-	imd.Push(pixel.V(c.pos.X, c.pos.Y), pixel.V(c.pos.X + c.size.X, c.pos.Y + c.size.Y))
+	imd.Push(pixel.V(c.pos.X, c.pos.Y), pixel.V(c.pos.X+c.size.X, c.pos.Y+c.size.Y))
 	imd.Rectangle(0)
 }
 
